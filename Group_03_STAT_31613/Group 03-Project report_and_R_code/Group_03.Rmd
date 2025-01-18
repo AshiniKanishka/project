@@ -1,0 +1,625 @@
+---
+title: "Descriptive Analysis"
+author: "GROUP_03"
+date: "2024-07-28"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r}
+#Import the dataset(Copy of Concrete_Data)
+
+Data<-read.csv("C:\\Users\\User\\OneDrive\\Desktop\\Group_03\\Copy of Concrete_Data.csv")
+
+colnames(Data)<-c("Cement","Blast_Furnace_Slag","Fly_Ash","Water","Superplasticizer","Coarse_Aggregate","Fine_Aggregate","Age_day","Concrete_compressive_strength")
+
+names(Data)
+
+head(Data)
+nrow(Data)
+###Missing values
+
+print("Total of Missing values")
+sum(is.na(Data))
+
+colSums(is.na(Data))
+
+
+```
+This data set has no missing values.
+
+
+```{r}
+
+##########Descriptive Analysis##########
+
+#################Cement############
+
+##Summary
+
+summary(Data$Cement)
+sd(Data$Cement)
+
+##Histogram
+hist(Data$Cement,xlab = "Cement",main="Histogram of Cement")
+
+
+```
+##Interpretation
+⁕There is a peak in the cement content distribution between 150 and 200 units, which is right-skewed.
+⁕The values of cement content are roughly between 100 and 550 units.
+⁕As the value rises, the frequency of cement content falls, suggesting a greater percentage of samples with lower cement concentration.
+
+
+```{r}
+
+#################Blast_Furnace_Slag############
+
+##Summary
+
+summary(Data$Blast_Furnace_Slag)
+sd(Data$Blast_Furnace_Slag)
+
+##Histogram
+hist(Data$Blast_Furnace_Slag,xlab = "Blast_Furnace_Slag",main="Histogram of Blast_Furnace_Slag")
+
+
+```
+####Interpretation
+⁕The data has a lengthy tail that points towards greater amounts of blast furnace slag and is biased to the right (positively skewed).
+
+
+
+```{r}
+#################Fly_Ash############
+
+##Summary
+
+summary(Data$Fly_Ash)
+sd(Data$Fly_Ash)
+
+##Histogram
+hist(Data$Fly_Ash,xlab = "Fly_Ash",main="Histogram of Fly_Ash")
+
+
+
+```
+###Interpretation
+⁕A long tail points in the direction of higher values, and the distribution is biased to the 
+right.
+
+```{r}
+
+#################Water############
+
+##Summary
+
+summary(Data$Water)
+sd(Data$Water)
+
+##Histogram
+hist(Data$Water,xlab = "Water",main="Histogram of Water")
+
+
+```
+####Interpretation
+⁕There is a peak in the water content distribution between middle, which is normally distributed.
+
+
+```{r}
+
+###############Superplasticizer############
+
+##Summary
+
+summary(Data$Superplasticizer)
+sd(Data$Superplasticizer)
+
+##Histogram
+hist(Data$Superplasticizer,xlab = "Superplasticizer",main="Histogram of Superplasticizer")
+
+
+```
+######Interpretation
+⁕There is a lengthy tail pointing towards higher values and a skew to the right in the data.
+
+
+```{r}
+###############Coarse_Aggregate############
+
+##Summary
+
+summary(Data$Coarse_Aggregate)
+sd(Data$Coarse_Aggregate)
+
+##Histogram
+hist(Data$Coarse_Aggregate,xlab = "Coarse_Aggregate",main="Histogram of Coarse_Aggregate")
+
+
+
+```
+#####Interpretation
+⁕A normal distribution of coarse aggregate sizes in the concrete mix is suggested by the histogram, which has a bell-shaped approximate form.
+
+
+```{r}
+###############Fine_Aggregate############
+
+##Summary
+
+summary(Data$Fine_Aggregate)
+sd(Data$Fine_Aggregate)
+
+##Histogram
+hist(Data$Fine_Aggregate,xlab = "Fine_Aggregate",main="Histogram of Fine_Aggregate")
+
+
+
+```
+###Interpretation
+
+⁕A normal distribution of fine aggregate sizes in the concrete mix is suggested by the histogram, which has a bell-shaped approximate form.
+
+
+
+```{r}
+###############`Age_day`############
+
+##Summary
+
+summary(Data$Age_day)
+sd(Data$Age_day)
+
+##Histogram
+hist(Data$Age_day,xlab = "Age_(day)",main="Histogram of Age_(day)")
+
+
+
+```
+###Interpretation
+⁕There is a significant leftward bias in the data, with many samples falling within the beginning age range of 0–100 days.
+
+
+```{r}
+###############Concrete_compressive_strength############
+
+##Summary
+
+summary(Data$Concrete_compressive_strength)
+sd(Data$Concrete_compressive_strength)
+
+##Histogram
+hist(Data$Concrete_compressive_strength,xlab = "Concrete_compressive_strength",main="Histogram of Concrete_compressive_strength")
+
+
+
+```
+####Interpretation
+
+⁕The histogram is roughly bell-shaped, suggesting that the concrete compressive strength values are approximately normally distributed.
+
+
+```{r}
+####Outliers
+
+
+# create detect outlier function
+detect_outlier <- function(x) {
+  
+  # calculate first quantile
+  Quantile1 <- quantile(x, probs=.25)
+  
+  # calculate third quantile
+  Quantile3 <- quantile(x, probs=.75)
+  
+  # calculate interquartile range
+  IQR = Quantile3 - Quantile1
+  
+  # return true or false
+  x > Quantile3 + (IQR * 1.5) | x < Quantile1 - (IQR * 1.5)
+}
+
+# create remove outlier function
+remove_outlier <- function(dataframe, columns = names(dataframe)) {
+  
+  # for loop to traverse in columns vector
+  for (col in columns) {
+    
+    # remove observation if it satisfies outlier function
+    dataframe <- dataframe[!detect_outlier(dataframe[[col]]), ]
+  }
+  
+  print("Remove outliers")
+  print(dataframe)
+}
+
+cleaned_data_1<-remove_outlier(Data, c('Cement','Blast_Furnace_Slag','Fly_Ash','Water','Superplasticizer','Coarse_Aggregate','Fine_Aggregate','Age_day','Concrete_compressive_strength'))
+
+cleaned_data_2<-remove_outlier(cleaned_data_1, c('Cement','Blast_Furnace_Slag','Fly_Ash','Water','Superplasticizer','Coarse_Aggregate','Fine_Aggregate','Age_day','Concrete_compressive_strength'))
+
+cleaned_data<-remove_outlier(cleaned_data_2, c('Cement','Blast_Furnace_Slag','Fly_Ash','Water','Superplasticizer','Coarse_Aggregate','Fine_Aggregate','Age_day','Concrete_compressive_strength'))
+
+nrow(cleaned_data)
+
+
+```
+##########Boxplots after removing Outliers
+
+```{r}
+#Cement
+##Boxplot
+boxplot(cleaned_data$Cement,ylab="Cement",main="Boxplot of Cement")
+
+```
+
+```{r}
+
+
+#Blast_Furnace_Slag
+##Boxplot
+boxplot(cleaned_data$Blast_Furnace_Slag,ylab="Blast_Furnace_Slag",main="Boxplot of Blast_Furnace_Slag")
+
+
+
+```
+
+```{r}
+##Fly_Ash
+##Boxplot
+boxplot(cleaned_data$Fly_Ash,ylab="Fly_Ash",main="Boxplot of Fly_Ash")
+
+
+```
+```{r}
+#Water
+##Boxplot
+boxplot(cleaned_data$Water,ylab="Water",main="Boxplot of Water")
+
+
+```
+
+```{r}
+#Superplasticizer
+##Boxplot
+boxplot(cleaned_data$Superplasticizer,ylab="Superplasticizer",main="Boxplot of Superplasticizer")
+```
+
+```{r}
+##Coarse_Aggregate
+##Boxplot
+boxplot(cleaned_data$Coarse_Aggregate,ylab="Coarse_Aggregate",main="Boxplot of Coarse_Aggregate")
+```
+
+
+```{r}
+##Fine_Aggregate
+##Boxplot
+boxplot(cleaned_data$Fine_Aggregate,ylab="Fine_Aggregate",main="Boxplot of Fine_Aggregate")
+```
+```{r}
+#Age_(day)
+##Boxplot
+boxplot(cleaned_data$Age_day,ylab="`Age_(day)`",main="Boxplot of `Age_(day)`")
+
+```
+```{r}
+#Concrete_compressive_strength
+##Boxplot
+boxplot(cleaned_data$Concrete_compressive_strength,ylab="Concrete_compressive_strength",main="Boxplot of Concrete_compressive_strength")
+```
+All the boxplots seems like no including outliers.
+Now we can consider the cleaned dataset.(After removing outliers)
+
+
+
+```{r}
+###This is our cleaned dataset
+
+
+head(cleaned_data)
+
+nrow(cleaned_data)
+
+```
+Now cleaned datset has 743 data.
+
+
+---
+title: "All"
+author: "GROUP_03"
+date: "2024-08-05"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r}
+#####Install packages#######
+
+library(dplyr)
+library(tidyr)
+library(MASS)
+library(Metrics)
+#install.packages("ISLR")
+library(ISLR)
+library(leaps)
+library(ggplot2)
+#install.packages("quantmod")
+library(quantmod)
+#install.packages("corrplot")
+library(corrplot)
+#install.packages("caTools")
+library(caTools)
+#install.packages("car")
+library(car)
+
+
+###Scatter plots
+pairs(cleaned_data)
+
+###Correlations
+cor(cleaned_data)
+
+
+###All predictors
+
+lm_0<-lm(Concrete_compressive_strength~.,data = cleaned_data)
+summary(lm_0)
+
+```
+##Interpretation
+*The model is highly significant with a p-value < 2.2e16, indicating that the predictors jointly have a significant effect on the concrete compressive strength.
+
+The model explains about 79.04% of the variability in concrete compressive strength (Rsquared = 0.7904). The significant predictors include cement, blast furnace slag, fly ash, water and age of the concrete.superplasticizer, Coarse and fine aggregates were not 
+significant predictors in this model. The model's overall F-test indicates it is a good fit for the data.
+
+
+
+```{r}
+###Anova test
+
+anova(lm_0)
+```
+##Interpretation
+*.Cement, Blast Furnace Slag, Fly Ash, Water, Superplasticizers, and Age are all statistically significant contributors to compressive strength, with Age and Cement having the most substantial effects.
+
+*.Coarse and Fine Aggregates do not have a statistically significant impact on compressive strength, as indicated by their low F values and high p-values.
+
+This ANOVA analysis shows that the mix components related to binders (Cement, Fly Ash, Blast Furnace Slag) and curing time (Age) play key roles in determining compressive strength, while aggregates do not significantly affect the outcome in this dataset.
+
+```{r}
+########Model Selection###########
+
+######Forward stepwise Selection#########
+fit_frwd<-regsubsets(Concrete_compressive_strength~ .,data = cleaned_data,nvmax = 8,method = "forward")
+frwd_summary<-summary(fit_frwd)
+frwd_summary
+
+```
+
+
+```{r}
+##########Find Adj R^2,Cp,BIC,RSS values
+criterion<-data.frame(model=1:8,
+                      Adj.R2=(frwd_summary$adjr2),
+                      Cp=(frwd_summary$cp),
+                      BIC=(frwd_summary$bic),
+                      RSS=(frwd_summary$rss))
+##Add MS_Res
+n<-nrow(cleaned_data)
+
+criterion$MS_Res<-criterion$RSS/(n-criterion$model-1)
+
+
+##Standardize
+criterion_std<-cbind(model=criterion$model,scale(criterion[,-1]))
+criterion_std<-as.data.frame(criterion_std)
+
+###Values
+criterion_std
+
+###Graphically
+ggplot(criterion_std,aes(model))+
+  geom_line(aes(y=Adj.R2,colour="Adj.R2"))+
+  geom_line(aes(y=Cp,colour="Cp"))+
+  geom_line(aes(y=BIC,colour="BIC"))+
+  geom_line(aes(y=RSS,colour="RSS"))+
+  geom_line(aes(y=MS_Res,colour="MS_Res"))+
+  theme_minimal()
+```
+###Interpretation
+• There are two methods to find the better model
+1) Formal model : Using the values of above criteria, the better model should have maximum value for adjusted R^2 and minimum values for Cp, BIC, RSS and MS_Res. Therefore according to the above values 5th model is the better model. 
+2) Graphical method 
+According to the plot, 5th model has maximum value for adjusted R^2 and minimum values for Cp, BIC, RSS and MS_Res. Therefore 5th model seems a better model.
+
+```{r}
+##coefficients
+
+coef(fit_frwd,5)
+
+model_1<-lm(Concrete_compressive_strength~Cement+Blast_Furnace_Slag+Fly_Ash+Water+Age_day,data = cleaned_data)
+summary(model_1)
+
+```
+##Interpretation
+###############With Leverage points
+```{r}
+##With Leverage points
+##Check for Homoscedasticity using residuals vs fitted values plot. 
+
+plot(model_1,which = 1,col=c("blue"))
+
+```
+```{r}
+##With Leverage points
+##Check for Independent or dependent using residuals vs Observation value plot.
+
+res <- data.frame(res = resid(model_1))
+avp <- cbind(cleaned_data, res)
+plot(1:nrow(avp), avp$res,
+ main = "Residuals vs. Observation",
+ xlab = "Observations",
+ ylab = "Residual",
+ col = "blue") 
+
+```
+
+```{r}
+
+##With Leverage points
+###Check the normality of residuals.(using QQ plot)
+plot(model_1,which = 2,col=c("black"))
+```
+```{r}
+
+##With Leverage points
+###Check the residual vs Leverage.
+plot(model_1,which = 5,col=c("blue"))
+```
+
+
+
+
+
+
+###############Without Leverage points
+
+```{r}
+##Check the leverage points
+
+
+leverage<-hatvalues(model_1)
+high_leverage<-which(leverage>2*(6+1)/nrow(cleaned_data))
+high_leverage
+
+cleaned_dataset <- cleaned_data[-high_leverage, ]
+
+
+
+nrow(cleaned_dataset)
+
+
+```
+##Removing Leverage points
+```{r}
+
+better_model<-lm(Concrete_compressive_strength~Cement+Blast_Furnace_Slag+Fly_Ash+Water+Age_day,data = cleaned_dataset)
+summary(better_model)
+
+
+```
+###Interpretation
+
+###Interpretation Now all are the significant.
+*Residual Standard Error (RSE)
+This indicates that the average distance of the observed values from the predicted values is about 6.87 units of Concrete Compressive Strength. A lower RSE suggests a better fit of the model to the data.
+*R-Squared
+ Approximately 79.12% of the variability in Concrete Compressive Strength can be explained by the model that includes cement, Blast furnace slag, fly ash, water,age day. 
+*Adjusted R-Squared
+An adjusted R-Squared of 78.97% indicates that the model still explains a substantial amount of variance in Concrete Compressive Strength consider the number of predictors.
+
+H0: The regression model is not significant.
+H1: The regression model is significant.
+
+p-value: < 2.2e-16<0.05
+We have sufficient evidence to reject the null hypothesis. Concluding that at least one of the predictors in the model significantly contributes to explaining the variability the variability in Concrete Compressive Strength.
+
+
+
+
+
+```{r}
+###Model diagnostics
+
+##Without Leverage points
+##Check the linearity using scatter plots.
+
+#Concrete_compressive_strength vs Cement
+plot(Concrete_compressive_strength~Cement,data = cleaned_dataset,main="Concrete_compressive_strength vs Cement")
+
+
+#Concrete_compressive_strength vs Blast_Furnace_Slag
+plot(Concrete_compressive_strength~Blast_Furnace_Slag,data =cleaned_dataset,main="Concrete_compressive_strength vs Blast_Furnace_Slag")
+
+
+#Concrete_compressive_strength vs Fly_Ash
+plot(Concrete_compressive_strength~Fly_Ash,data = cleaned_dataset,main="Concrete_compressive_strength vs Fly_Ash")
+
+
+#Concrete_compressive_strength vs Water
+plot(Concrete_compressive_strength~Water,data = cleaned_dataset,main="Concrete_compressive_strength vs Water")
+
+
+
+#Concrete_compressive_strength vs Age_day
+plot(Concrete_compressive_strength~Age_day,data = cleaned_dataset,main="Concrete_compressive_strength vs Age_day")
+
+par(mfrow=c(2,2)) 
+plot(better_model)
+```
+
+
+
+```{r}
+##Without Leverage points
+##Check for Homoscedasticity using residuals vs fitted values plot. 
+
+plot(better_model,which = 1,col=c("blue"))
+```
+###Interpretation
+The residuals appear to be scattered randomly around 0, which suggests that the relationship is likely linear. However, there seems to be some minor clustering, indicating potential non-constant variance (heteroscedasticity), though it's not severe.
+It seems that the fitted values are contain the constant variance. Then the homoscedasticity property hold. 
+
+```{r}
+
+##Without Leverage points
+##Check for Independent or dependent using residuals vs Observation value plot.
+
+res <- data.frame(res = resid(better_model))
+avp <- cbind(cleaned_dataset, res)
+plot(1:nrow(avp), avp$res,
+ main = "Residuals vs. Observation",
+ xlab = "Observations",
+ ylab = "Residual",
+ col = "blue") 
+
+```
+It seems that the  errors are uncorrelated. 
+
+```{r}
+
+##Without Leverage points
+###Check the normality of residuals.(using QQ plot)
+plot(better_model,which = 2,col=c("black"))
+
+
+```
+The maximum points fall approximately along the reference line. Therefore the residuals are normally distributed
+
+##Interpretation
+
+```{r}
+##Without Leverage points
+###Check the residual vs Leverage.
+plot(better_model,which = 5,col=c("blue"))
+```
+
+##Interpretation
+Most points are clustered near the bottom, indicating that no data points exert an undue amount of leverage on the model. However, some points like 915 and 835 might be influential as they are close to the Cook's distance line.
+
+
+```{r}
+##########Multicollinearity#############
+
+vif_values<-vif(better_model)
+vif_values
+
+```
+
+
+
+
+

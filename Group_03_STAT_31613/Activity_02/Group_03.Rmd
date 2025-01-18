@@ -1,0 +1,270 @@
+---
+title: "Descriptive Analysis"
+author: "GROUP_03"
+date: "2024-07-28"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r}
+#Import the dataset(Copy of Concrete_Data)
+
+Data<-read.csv("C:\\Users\\User\\OneDrive\\Desktop\\Copy of Concrete_Data.csv")
+
+colnames(Data)<-c("Cement","Blast_Furnace_Slag","Fly_Ash","Water","Superplasticizer","Coarse_Aggregate","Fine_Aggregate","Age_day","Concrete_compressive_strength")
+
+names(Data)
+
+head(Data)
+
+###Missing values
+
+print("Total of Missing values")
+sum(is.na(Data))
+
+colSums(is.na(Data))
+
+```
+This data set has no missing values.
+
+
+```{r}
+
+##########Descriptive Analysis##########
+
+#################Cement############
+
+##Summary
+
+summary(Data$Cement)
+
+##Histogram
+hist(Data$Cement,xlab = "Cement",main="Histogram of Cement")
+
+
+```
+
+```{r}
+
+#################Blast_Furnace_Slag############
+
+##Summary
+
+summary(Data$Blast_Furnace_Slag)
+
+##Histogram
+hist(Data$Blast_Furnace_Slag,xlab = "Blast_Furnace_Slag",main="Histogram of Blast_Furnace_Slag")
+
+
+
+
+```
+```{r}
+#################Fly_Ash############
+
+##Summary
+
+summary(Data$Fly_Ash)
+
+##Histogram
+hist(Data$Fly_Ash,xlab = "Fly_Ash",main="Histogram of Fly_Ash")
+
+
+
+```
+```{r}
+
+#################Water############
+
+##Summary
+
+summary(Data$Water)
+
+##Histogram
+hist(Data$Water,xlab = "Water",main="Histogram of Water")
+
+
+```
+
+```{r}
+###############Superplasticizer############
+
+##Summary
+
+summary(Data$Superplasticizer)
+
+##Histogram
+hist(Data$Superplasticizer,xlab = "Superplasticizer",main="Histogram of Superplasticizer")
+
+
+```
+
+```{r}
+###############Coarse_Aggregate############
+
+##Summary
+
+summary(Data$Coarse_Aggregate)
+
+##Histogram
+hist(Data$Coarse_Aggregate,xlab = "Coarse_Aggregate",main="Histogram of Coarse_Aggregate")
+
+
+
+```
+```{r}
+###############Fine_Aggregate############
+
+##Summary
+
+summary(Data$Fine_Aggregate)
+
+##Histogram
+hist(Data$Fine_Aggregate,xlab = "Fine_Aggregate",main="Histogram of Fine_Aggregate")
+
+
+
+```
+
+```{r}
+###############`Age_day`############
+
+##Summary
+
+summary(Data$Age_day)
+
+##Histogram
+hist(Data$Age_day,xlab = "Age_(day)",main="Histogram of Age_(day)")
+
+
+
+```
+
+```{r}
+###############Concrete_compressive_strength############
+
+##Summary
+
+summary(Data$Concrete_compressive_strength)
+
+##Histogram
+hist(Data$Concrete_compressive_strength,xlab = "Concrete_compressive_strength",main="Histogram of Concrete_compressive_strength")
+
+
+
+```
+```{r}
+####Cement
+##Boxplot
+boxplot(Data$Cement,ylab="Cement",main="Boxplot of Cement",sub=paste("Outliers: ",boxplot.stats(Data$Cement)$out))
+
+#This boxplot seems that no outliers
+```
+```{r}
+#Blast_Furnace_Slag
+##Boxplot
+boxplot(Data$Blast_Furnace_Slag,ylab="Blast_Furnace_Slag",main="Boxplot of Blast_Furnace_Slag",sub=paste("Outliers: ",boxplot.stats(Data$Blast_Furnace_Slag)$out))
+
+#This box plot seems that one outlier point.
+#Remove the outlier row.
+outlier_rows_Blast_Furnace_Slag<-boxplot.stats(Data$Blast_Furnace_Slag)$out
+
+#Clean Outliers
+Data_cleaned_1<-subset(Data,!(Blast_Furnace_Slag%in%outlier_rows_Blast_Furnace_Slag))
+
+```
+
+```{r}
+##Fly_Ash
+##Boxplot
+boxplot(Data_cleaned_1$Fly_Ash,ylab="Fly_Ash",main="Boxplot of Fly_Ash",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_1$Fly_Ash)$out))
+
+#This box plot seems that no outlier.
+
+```
+```{r}
+#Water
+##Boxplot
+boxplot(Data_cleaned_1$Water,ylab="Water",main="Boxplot of Water",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_1$Water)$out))
+
+#This box plot seems that three outlier points.
+#Remove the outlier row.
+outlier_rows_Water<-boxplot.stats(Data_cleaned_1$Water)$out
+
+Data_cleaned_2<-subset(Data_cleaned_1,!(Water%in%outlier_rows_Water))
+
+```
+
+```{r}
+#Superplasticizer
+##Boxplot
+boxplot(Data_cleaned_2$Superplasticizer,ylab="Superplasticizer",main="Boxplot of Superplasticizer",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_2$Superplasticizer)$out))
+
+#This box plot seems that two outlier points.
+#Remove the outlier row.
+outlier_rows_Superplasticizer<-boxplot.stats(Data_cleaned_2$Superplasticizer)$out
+
+
+Data_cleaned_3<-subset(Data_cleaned_2,!(Superplasticizer%in%outlier_rows_Superplasticizer))
+
+```
+
+```{r}
+##Coarse_Aggregate
+##Boxplot
+boxplot(Data_cleaned_3$Coarse_Aggregate,ylab="Coarse_Aggregate",main="Boxplot of Coarse_Aggregate",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_3$Coarse_Aggregate)$out))
+
+#This box plot seems that no outlier points.
+```
+
+```{r}
+##Fine_Aggregate
+##Boxplot
+boxplot(Data_cleaned_3$Fine_Aggregate,ylab="Fine_Aggregate",main="Boxplot of Fine_Aggregate",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_3$Fine_Aggregate)$out))
+
+#This box plot seems that one outlier point.
+#Remove the outlier row.
+outlier_rows_Fine_Aggregate<-boxplot.stats(Data_cleaned_3$Fine_Aggregate)$out
+
+
+Data_cleaned_4<-subset(Data_cleaned_3,!(Fine_Aggregate%in%outlier_rows_Fine_Aggregate))
+
+```
+```{r}
+#Age_(day)
+##Boxplot
+boxplot(Data_cleaned_4$Age_day,ylab="`Age_(day)`",main="Boxplot of `Age_(day)`",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_4$Age_day)$out))
+
+#This box plot seems that four outlier points.
+#Remove the outlier row.
+outlier_rows_Age<-boxplot.stats(Data_cleaned_4$Age_day)$out
+
+Data_cleaned_5<-subset(Data_cleaned_4,!(Age_day%in%outlier_rows_Age))
+
+```
+```{r}
+#Concrete_compressive_strength
+##Boxplot
+boxplot(Data_cleaned_5$Concrete_compressive_strength,ylab="Concrete_compressive_strength",main="Boxplot of Concrete_compressive_strength",sub=paste("Outliers: ",boxplot.stats(Data_cleaned_5$Concrete_compressive_strength)$out))
+
+#This box plot seems that four outlier points.
+#Remove the outlier row.
+outlier_rows_Concrete_compressive_strength<-boxplot.stats(Data_cleaned_5$Concrete_compressive_strength)$out
+
+
+
+Data_cleaned_6<-subset(Data_cleaned_5,!(Concrete_compressive_strength%in%outlier_rows_Concrete_compressive_strength))
+
+
+```
+```{r}
+###This is our cleaned dataset
+
+cleaned_data<-Data_cleaned_6
+head(cleaned_data)
+
+nrow(cleaned_data)
+
+```
+

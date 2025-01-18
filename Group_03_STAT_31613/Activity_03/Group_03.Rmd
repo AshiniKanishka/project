@@ -1,0 +1,560 @@
+---
+title: "Descriptive Analysis"
+author: "GROUP_03"
+date: "2024-07-28"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+
+```{r}
+#Import the dataset(Copy of Concrete_Data)
+
+Data<-read.csv("C:\\Users\\User\\OneDrive\\Desktop\\Group_03\\Copy of Concrete_Data.csv")
+
+colnames(Data)<-c("Cement","Blast_Furnace_Slag","Fly_Ash","Water","Superplasticizer","Coarse_Aggregate","Fine_Aggregate","Age_day","Concrete_compressive_strength")
+
+names(Data)
+
+head(Data)
+nrow(Data)
+###Missing values
+
+print("Total of Missing values")
+sum(is.na(Data))
+
+colSums(is.na(Data))
+
+
+```
+This data set has no missing values.
+
+
+```{r}
+
+##########Descriptive Analysis##########
+
+#################Cement############
+
+##Summary
+
+summary(Data$Cement)
+sd(Data$Cement)
+
+##Histogram
+hist(Data$Cement,xlab = "Cement",main="Histogram of Cement")
+
+
+```
+
+```{r}
+
+#################Blast_Furnace_Slag############
+
+##Summary
+
+summary(Data$Blast_Furnace_Slag)
+sd(Data$Blast_Furnace_Slag)
+
+##Histogram
+hist(Data$Blast_Furnace_Slag,xlab = "Blast_Furnace_Slag",main="Histogram of Blast_Furnace_Slag")
+
+
+
+
+```
+```{r}
+#################Fly_Ash############
+
+##Summary
+
+summary(Data$Fly_Ash)
+sd(Data$Fly_Ash)
+
+##Histogram
+hist(Data$Fly_Ash,xlab = "Fly_Ash",main="Histogram of Fly_Ash")
+
+
+
+```
+```{r}
+
+#################Water############
+
+##Summary
+
+summary(Data$Water)
+sd(Data$Water)
+
+##Histogram
+hist(Data$Water,xlab = "Water",main="Histogram of Water")
+
+
+```
+
+```{r}
+
+###############Superplasticizer############
+
+##Summary
+
+summary(Data$Superplasticizer)
+sd(Data$Superplasticizer)
+
+##Histogram
+hist(Data$Superplasticizer,xlab = "Superplasticizer",main="Histogram of Superplasticizer")
+
+
+```
+
+```{r}
+###############Coarse_Aggregate############
+
+##Summary
+
+summary(Data$Coarse_Aggregate)
+sd(Data$Coarse_Aggregate)
+
+##Histogram
+hist(Data$Coarse_Aggregate,xlab = "Coarse_Aggregate",main="Histogram of Coarse_Aggregate")
+
+
+
+```
+```{r}
+###############Fine_Aggregate############
+
+##Summary
+
+summary(Data$Fine_Aggregate)
+sd(Data$Fine_Aggregate)
+
+##Histogram
+hist(Data$Fine_Aggregate,xlab = "Fine_Aggregate",main="Histogram of Fine_Aggregate")
+
+
+
+```
+
+```{r}
+###############`Age_day`############
+
+##Summary
+
+summary(Data$Age_day)
+sd(Data$Age_day)
+
+##Histogram
+hist(Data$Age_day,xlab = "Age_(day)",main="Histogram of Age_(day)")
+
+
+
+```
+
+```{r}
+###############Concrete_compressive_strength############
+
+##Summary
+
+summary(Data$Concrete_compressive_strength)
+sd(Data$Concrete_compressive_strength)
+
+##Histogram
+hist(Data$Concrete_compressive_strength,xlab = "Concrete_compressive_strength",main="Histogram of Concrete_compressive_strength")
+
+
+
+```
+```{r}
+####Outliers
+
+
+# create detect outlier function
+detect_outlier <- function(x) {
+  
+  # calculate first quantile
+  Quantile1 <- quantile(x, probs=.25)
+  
+  # calculate third quantile
+  Quantile3 <- quantile(x, probs=.75)
+  
+  # calculate interquartile range
+  IQR = Quantile3 - Quantile1
+  
+  # return true or false
+  x > Quantile3 + (IQR * 1.5) | x < Quantile1 - (IQR * 1.5)
+}
+
+# create remove outlier function
+remove_outlier <- function(dataframe, columns = names(dataframe)) {
+  
+  # for loop to traverse in columns vector
+  for (col in columns) {
+    
+    # remove observation if it satisfies outlier function
+    dataframe <- dataframe[!detect_outlier(dataframe[[col]]), ]
+  }
+  
+  print("Remove outliers")
+  print(dataframe)
+}
+
+cleaned_data_1<-remove_outlier(Data, c('Cement','Blast_Furnace_Slag','Fly_Ash','Water','Superplasticizer','Coarse_Aggregate','Fine_Aggregate','Age_day','Concrete_compressive_strength'))
+
+cleaned_data_2<-remove_outlier(cleaned_data_1, c('Cement','Blast_Furnace_Slag','Fly_Ash','Water','Superplasticizer','Coarse_Aggregate','Fine_Aggregate','Age_day','Concrete_compressive_strength'))
+
+cleaned_data<-remove_outlier(cleaned_data_2, c('Cement','Blast_Furnace_Slag','Fly_Ash','Water','Superplasticizer','Coarse_Aggregate','Fine_Aggregate','Age_day','Concrete_compressive_strength'))
+
+nrow(cleaned_data)
+
+```
+##########Boxplots after removing Outliers
+
+```{r}
+#Cement
+##Boxplot
+boxplot(cleaned_data$Cement,ylab="Cement",main="Boxplot of Cement")
+
+```
+
+
+
+```{r}
+
+
+#Blast_Furnace_Slag
+##Boxplot
+boxplot(cleaned_data$Blast_Furnace_Slag,ylab="Blast_Furnace_Slag",main="Boxplot of Blast_Furnace_Slag")
+
+
+
+```
+
+```{r}
+##Fly_Ash
+##Boxplot
+boxplot(cleaned_data$Fly_Ash,ylab="Fly_Ash",main="Boxplot of Fly_Ash")
+
+
+```
+```{r}
+#Water
+##Boxplot
+boxplot(cleaned_data$Water,ylab="Water",main="Boxplot of Water")
+
+
+```
+
+```{r}
+#Superplasticizer
+##Boxplot
+boxplot(cleaned_data$Superplasticizer,ylab="Superplasticizer",main="Boxplot of Superplasticizer")
+```
+
+```{r}
+##Coarse_Aggregate
+##Boxplot
+boxplot(cleaned_data$Coarse_Aggregate,ylab="Coarse_Aggregate",main="Boxplot of Coarse_Aggregate")
+```
+
+
+```{r}
+##Fine_Aggregate
+##Boxplot
+boxplot(cleaned_data$Fine_Aggregate,ylab="Fine_Aggregate",main="Boxplot of Fine_Aggregate")
+```
+```{r}
+#Age_(day)
+##Boxplot
+boxplot(cleaned_data$Age_day,ylab="`Age_(day)`",main="Boxplot of `Age_(day)`")
+
+```
+```{r}
+#Concrete_compressive_strength
+##Boxplot
+boxplot(cleaned_data$Concrete_compressive_strength,ylab="Concrete_compressive_strength",main="Boxplot of Concrete_compressive_strength")
+```
+
+
+
+
+```{r}
+###This is our cleaned dataset
+
+
+head(cleaned_data)
+
+nrow(cleaned_data)
+
+```
+
+---
+title: "All"
+author: "GROUP_03"
+date: "2024-08-05"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r}
+#####Install packages#######
+
+library(dplyr)
+library(tidyr)
+library(MASS)
+library(Metrics)
+library(ISLR)
+library(leaps)
+library(ggplot2)
+library(quantmod)
+library(corrplot)
+library(caTools)
+library(car)
+
+
+###Scatter plots
+pairs(cleaned_data)
+
+###Correlations
+cor(cleaned_data)
+
+
+###All preductors
+
+lm_0<-lm(Concrete_compressive_strength~.,data = cleaned_data)
+summary(lm_0)
+
+```
+##Interpretation
+
+
+
+```{r}
+###Anova test
+
+anova(lm_0)
+```
+##Interpretation
+
+
+```{r}
+########Model Selection###########
+
+######Forward stepwise Selection#########
+fit_frwd<-regsubsets(Concrete_compressive_strength~ .,data = cleaned_data,nvmax = 8,method = "forward")
+frwd_summary<-summary(fit_frwd)
+frwd_summary
+
+```
+##Interpretation
+
+
+```{r}
+##########Find Adj R^2,Cp,BIC,RSS values
+criterion<-data.frame(model=1:8,
+                      Adj.R2=(frwd_summary$adjr2),
+                      Cp=(frwd_summary$cp),
+                      BIC=(frwd_summary$bic),
+                      RSS=(frwd_summary$rss))
+##Add MS_Res
+n<-nrow(cleaned_data)
+
+criterion$MS_Res<-criterion$RSS/(n-criterion$model-1)
+
+
+##Standardize
+criterion_std<-cbind(model=criterion$model,scale(criterion[,-1]))
+criterion_std<-as.data.frame(criterion_std)
+
+###Values
+criterion_std
+
+###Graphically
+ggplot(criterion_std,aes(model))+
+  geom_line(aes(y=Adj.R2,colour="Adj.R2"))+
+  geom_line(aes(y=Cp,colour="Cp"))+
+  geom_line(aes(y=BIC,colour="BIC"))+
+  geom_line(aes(y=RSS,colour="RSS"))+
+  geom_line(aes(y=MS_Res,colour="MS_Res"))+
+  theme_minimal()
+```
+###Interpretation
+model 6 is better model
+
+
+
+```{r}
+##coefficients
+
+coef(fit_frwd,6)
+
+model_1<-lm(Concrete_compressive_strength~Cement+Blast_Furnace_Slag+Fly_Ash+Water+Superplasticizer+Age_day,data = cleaned_data)
+summary(model_1)
+
+```
+##Interpretation
+###############With Leverage points
+```{r}
+##With Leverage points
+##Check for Homoscedasticity using residuals vs fitted values plot. 
+
+plot(model_1,which = 1,col=c("blue"))
+
+```
+```{r}
+##With Leverage points
+##Check for Independent or dependent using residuals vs Observation value plot.
+
+res <- data.frame(res = resid(model_1))
+avp <- cbind(cleaned_data, res)
+plot(1:nrow(avp), avp$res,
+ main = "Residuals vs. Observation",
+ xlab = "Observations",
+ ylab = "Residual",
+ col = "blue") 
+```
+```{r}
+
+##With Leverage points
+###Check the normality of residuals.(using QQ plot)
+plot(model_1,which = 2,col=c("black"))
+```
+```{r}
+
+##With Leverage points
+###Check the residual vs Leverage.
+plot(model_1,which = 5,col=c("blue"))
+```
+
+
+
+
+
+
+###############Without Leverage points
+
+```{r}
+##Check the leverage points
+
+
+leverage<-hatvalues(model_1)
+high_leverage<-which(leverage>2*(6+1)/nrow(cleaned_data))
+high_leverage
+
+cleaned_dataset <- cleaned_data[-high_leverage, ]
+
+
+
+nrow(cleaned_dataset)
+
+
+```
+
+```{r}
+
+better_model<-lm(Concrete_compressive_strength~Cement+Blast_Furnace_Slag+Fly_Ash+Water+Superplasticizer+Age_day,data = cleaned_dataset)
+summary(better_model)
+
+
+```
+
+
+
+
+
+```{r}
+###Model diagnostics
+
+##Without Leverage points
+##Check the linearity using scatter plots.
+
+#Concrete_compressive_strength vs Cement
+plot(Concrete_compressive_strength~Cement,data = cleaned_dataset,main="Concrete_compressive_strength vs Cement")
+
+
+#Concrete_compressive_strength vs Blast_Furnace_Slag
+plot(Concrete_compressive_strength~Blast_Furnace_Slag,data =cleaned_dataset,main="Concrete_compressive_strength vs Blast_Furnace_Slag")
+
+
+#Concrete_compressive_strength vs Fly_Ash
+plot(Concrete_compressive_strength~Fly_Ash,data = cleaned_dataset,main="Concrete_compressive_strength vs Fly_Ash")
+
+
+#Concrete_compressive_strength vs Water
+plot(Concrete_compressive_strength~Water,data = cleaned_dataset,main="Concrete_compressive_strength vs Water")
+
+
+#Concrete_compressive_strength vs Superplasticizer
+plot(Concrete_compressive_strength~Superplasticizer,data = cleaned_dataset,main="Concrete_compressive_strength vs Superplasticizer")
+
+
+#Concrete_compressive_strength vs Age_day
+plot(Concrete_compressive_strength~Age_day,data = cleaned_dataset,main="Concrete_compressive_strength vs Age_day")
+
+```
+
+
+
+```{r}
+##Without Leverage points
+##Check for Homoscedasticity using residuals vs fitted values plot. 
+
+plot(better_model,which = 1,col=c("blue"))
+```
+It seems that the fitted values are contain the constant variance. Then the homoscedasticity property hold. 
+
+```{r}
+
+##Without Leverage points
+##Check for Independent or dependent using residuals vs Observation value plot.
+
+res <- data.frame(res = resid(better_model))
+avp <- cbind(cleaned_dataset, res)
+plot(1:nrow(avp), avp$res,
+ main = "Residuals vs. Observation",
+ xlab = "Observations",
+ ylab = "Residual",
+ col = "blue") 
+
+```
+It seems that the  errors are uncorrelated. 
+
+```{r}
+
+##Without Leverage points
+###Check the normality of residuals.(using QQ plot)
+plot(better_model,which = 2,col=c("black"))
+
+
+```
+The maximum points fall approximately along the reference line. Therefore the residuals are normally 
+distributed
+
+##Interpretation
+
+```{r}
+##Without Leverage points
+###Check the residual vs Leverage.
+plot(better_model,which = 5,col=c("blue"))
+```
+
+
+
+
+```{r}
+##########Multicollinearity#############
+
+vif_values<-vif(better_model)
+vif_values
+
+```
+```{r}
+###Shapiro test
+
+```
+
+
+
+
